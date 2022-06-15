@@ -3,7 +3,7 @@ import axios from 'axios'
 import { useEffect } from "react";
 
 
-const URI = 'http://192.168.0.40:5000/api';
+const URI = process.env.REACT_APP_API_URL;
 const HOST = window.location.origin;
 
 export default function Login() {
@@ -21,6 +21,7 @@ export default function Login() {
 
   useEffect(() => {
     const user = window.localStorage.getItem('USER')
+    console.log(URI)
     if(user){
       window.location.href = '/dashboard'
     }
@@ -31,7 +32,7 @@ export default function Login() {
     e.preventDefault()
     axios({
       method: 'post',
-      url: URI + "/login",
+      url: URI + "/api/login",
       data: {
         email: email.value,
         password: password.value,
