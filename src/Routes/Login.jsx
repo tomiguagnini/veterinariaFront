@@ -1,15 +1,16 @@
 import { useState } from "react"
 import axios from 'axios'
 import { useEffect } from "react";
+import {useNavigate, Link} from "react-router-dom"
 
+const URL = process.env.REACT_APP_API_URL;
 
-const URI = process.env.REACT_APP_API_URL;
-const HOST = window.location.origin;
 
 export default function Login() {
   const [email, setEmail] = useState({ value: '', validate: false })
   const [password, setPassword] = useState({ value: '', validate: false })
   const [response, setResponse] = useState('')
+  const location = useNavigate()
 
   const OnChange = (e) => {
     setEmail({ value: e.target.value })
@@ -21,9 +22,8 @@ export default function Login() {
 
   useEffect(() => {
     const user = window.localStorage.getItem('USER')
-    console.log(URI)
     if(user){
-      window.location.href = '/dashboard'
+      location('/dashboard')
     }
   }, []);
 
@@ -32,7 +32,7 @@ export default function Login() {
     e.preventDefault()
     axios({
       method: 'post',
-      url: URI + "/api/login",
+      url: URL + "/api/login",
       data: {
         email: email.value,
         password: password.value,
@@ -46,7 +46,8 @@ export default function Login() {
           token: response.data.token,
         }
         window.localStorage.setItem("USER", JSON.stringify(user))
-        window.location.href = HOST + '/dashboard';
+        location('/dashboard')
+        
       }
       console.log(response.data);
     })
@@ -111,16 +112,16 @@ export default function Login() {
 
             <div className="flex items-center justify-between">
               <div className="flex items-center text-sm">
-                <a href="/register" className="font-medium text-rose-400 hover:text-rose-300">
+                <Link to="/register" className="font-medium text-rose-400 hover:text-rose-300">
                   Create new account
-                </a>
+                </Link>
 
               </div>
 
               <div className="text-sm">
-                <a href="#" className="font-medium text-rose-400 hover:text-rose-300">
+                <p className="font-medium text-rose-400 hover:text-rose-300">
                   Forgot your password?
-                </a>
+                </p>
               </div>
             </div>
 

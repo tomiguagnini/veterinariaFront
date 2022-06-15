@@ -1,5 +1,5 @@
 import React from 'react';
-import foto from '../assets/perro.png'
+import { Link } from 'react-router-dom';
 
 
 const Home = () => {
@@ -7,14 +7,14 @@ const Home = () => {
         <div>
             <nav>
                 <div className='flex flex-row justify-between md:justify-end items-center'>
-                    <a className='p-1 bg-rose-500 hover:bg-rose-400 text-white rounded-md m-3'
-                    href='/login'>
+                    <Link className='p-1 bg-rose-500 hover:bg-rose-400 text-white rounded-md m-3'
+                    to='/login'>
                         Iniciar Sesion
-                    </a>
-                    <a className='p-1 bg-rose-500 hover:bg-rose-400 text-white rounded-md m-3 '
-                    href="/register">
+                    </Link>
+                    <Link className='p-1 bg-rose-500 hover:bg-rose-400 text-white rounded-md m-3 '
+                    to="/register">
                         Registrarse
-                    </a>
+                    </Link>
                 </div>
                 
             </nav>

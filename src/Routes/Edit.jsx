@@ -2,13 +2,14 @@ import React from 'react';
 import FormPatient from '../Components/FormPatient';
 import { useState, useEffect } from 'react';
 import services from '../services/servicePatients';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams, Link} from 'react-router-dom';
 
 
 const Edit = () => {
     const [newPatient, setnewPatient] = useState('');
     const [patient, setPatient] = useState('')
     const {id} = useParams()
+    const location = useNavigate()
 
     useEffect(() => {
         services.getPatient(setPatient,(a)=>a,id)
@@ -23,7 +24,7 @@ const Edit = () => {
         console.log(newPatient)
         const response = await services.editPatient(id,newPatient)
         if ( response.status === 200 ){
-            window.location.href = '/dashboard'
+            location('/dashboard')
         }
     }
 
@@ -31,7 +32,7 @@ const Edit = () => {
     return (
         <>
             <header className='h-12 bg-rose-400 flex '>
-                <a href='/dashboard' className='text-white font-bold p-3 hover:text-slate-300 text-center hover:underline '>  Volver</a>
+                <Link to='/dashboard' className='text-white font-bold p-3 hover:text-slate-300 text-center hover:underline '>  Volver</Link>
             </header>
             <div className=' '>
                 <h2 className='text-center text-2xl mt-8'>Editar...</h2>

@@ -3,21 +3,27 @@ import ItemPaciente from '../Components/ItemPaciente';
 import { useState, useEffect } from 'react';
 import FormPatient from '../Components/FormPatient';
 import servicePatients from '../services/servicePatients';
+import { useNavigate } from 'react-router-dom';
 
 
 
 
 const Dashboard = () => {
 
-    const [patients, setPatients] = useState([]);
+    const [patients, setPatients] = useState('');
     const [newPatient, setNewPatient] = useState([])
+    const location = useNavigate()
 
 
     useEffect(() => {
-        servicePatients.getManyPatients(setPatients, handleGetError);
-        return () => {
+        try{
+            servicePatients.getManyPatients(setPatients, handleGetError);
 
+        }catch(err){
+            console.log('error',err)
+            location('/login')
         }
+       
 
     }, []);
 
@@ -37,7 +43,13 @@ const Dashboard = () => {
         
         const response = await servicePatients.addPatietns(newPatient)
         if (response.status === 200){
-            servicePatients.getManyPatients(setPatients, handleGetError)
+            try{
+                servicePatients.getManyPatients(setPatients, handleGetError);
+    
+            }catch(err){
+                console.log('error',err)
+                location('/login')
+            }
             clearFormData(event)
         }
             
@@ -52,11 +64,11 @@ const Dashboard = () => {
 
     }
     const onClickEdit = (id) => {
-        window.location.href = '/edit/' + id;
+        location('/edit/'+id)
     }
-    const closeSession = () => {
-        window.localStorage.removeItem('USER');
-        window.location.href = '/login'
+    const closeSession = async() => {
+        await window.localStorage.removeItem('USER');
+        location('/')
 
     }
 
@@ -89,6 +101,7 @@ const Dashboard = () => {
                     <p className='text-center text-sm p-2'> Administra tus pacientes y citas </p>
                     <div className='rounded'>
                         {
+                            patients?
                             patients
                                 .map((e) => {
 
@@ -106,7 +119,7 @@ const Dashboard = () => {
                                     )
                                 }).reverse()
 
-                        }
+                        :""}
 
 
                     </div>

@@ -3,6 +3,7 @@ import { useState } from 'react';
 import Input from '../Components/Input';
 import { ValidateEmail } from '../helpers/validate';
 import axios from 'axios';
+import { useNavigate, Link } from 'react-router-dom';
 const URI = 'http://localhost:5000/api';
 const HOST = window.location.origin;
 
@@ -14,6 +15,7 @@ const Register = () => {
     const [password, setPassword] = useState({ value: '', validate: '' });
     const [phone, setPhone] = useState({ value: '', validate: '' });
     const [data, setData] = useState('');
+    const location = useNavigate()
 
 
 
@@ -34,7 +36,7 @@ const Register = () => {
                 "Content-Type": "application/json"
             }
         })
-            .then(response => response.status === 200 ? window.location.href = HOST + '/login' : '')
+            .then(response => response.status === 200 ? location('/login') : '')
             .catch(err => setData(err.response.data))
     }
 
@@ -110,9 +112,9 @@ const Register = () => {
                                     <Input label="Phone" type="text" value={phone.value} onChange={setPhone} />
 
                                     <div className="text-sm mb-3">
-                                        <a href="/login" className="font-medium text-rose-400 hover:text-rose-300">
+                                        <Link to="/login" className="font-medium text-rose-400 hover:text-rose-300">
                                             ya tienes cuenta? inicia session
-                                        </a>
+                                        </Link>
                                     </div>
 
                                     <button type="submit"
