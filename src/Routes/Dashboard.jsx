@@ -15,7 +15,6 @@ const Dashboard = () => {
       servicePatients.getManyPatients(setPatients, handleGetError);
     } catch (err) {
       console.log("error", err);
-      //location('/login')
     }
   }, []);
 
@@ -35,7 +34,6 @@ const Dashboard = () => {
     const response = await servicePatients.addPatietns(newPatient);
     if (response.status === 200) {
       servicePatients.getManyPatients(setPatients, handleGetError);
-
       clearFormData(event);
     }
   };

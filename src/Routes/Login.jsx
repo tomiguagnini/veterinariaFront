@@ -2,8 +2,9 @@ import { useState } from "react"
 import axios from 'axios'
 import { useEffect } from "react";
 import {useNavigate, Link} from "react-router-dom"
+import serviceUser from "../services/serviceUser"
 
-const URL = process.env.REACT_APP_API_URL;
+
 
 
 export default function Login() {
@@ -20,6 +21,7 @@ export default function Login() {
   }
 
 
+
   useEffect(() => {
     const user = window.localStorage.getItem('USER')
     if(user){
@@ -28,33 +30,19 @@ export default function Login() {
   }, []);
 
 
-  const sendCredentials = (e) => {
+  const sendCredentials = async(e) => {
     e.preventDefault()
-    axios({
-      method: 'post',
-      url: URL + "/api/login",
-      data: {
-        email: email.value,
-        password: password.value,
-      }
-    })
-    .then(function (response) {
-      if (response.status === 200) {
-        const user = {
-          email: response.data.email,
-          id: response.data.id,
-          token: response.data.token,
-        }
-        window.localStorage.setItem("USER", JSON.stringify(user))
-        location('/dashboard')
-        
-      }
-      console.log(response.data);
-    })
-    .catch(function (error) {
-      console.log(error);
-      setResponse(error.response.data)
-    });
+    console.log(email,password)
+    const response = await serviceUser.login(email.value,password.value,setResponse);
+    const user = {
+      email: response.data.email,
+      id: response.data.id,
+      token: response.data.token,
+      };
+    window.localStorage.setItem("USER", JSON.stringify(user));
+    setTimeout(() => location("/dashboard"),500);
+    console.log(response.data);
+    
   }
 
 

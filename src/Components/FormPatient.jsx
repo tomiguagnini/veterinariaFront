@@ -70,7 +70,7 @@ const FormPatient = ({submit,setData,values=''}) => {
                 <Input id={4}label='Fecha Alta' type='date' value={date} onChange={handlePatietnsChange}> </Input>
                 <Input id={5}label='Sintomas' value={symptom} onChange={handlePatietnsChange}> </Input>
                 <button className='bg-rose-400 p-2 rounded w-full' type='submit'>Enviar</button>
-                <button className='clear'onClick={handleClick}></button>
+                <span className='clear'onClick={handleClick}></span>
 
             </form>
         </>
