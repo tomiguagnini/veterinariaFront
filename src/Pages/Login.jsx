@@ -1,8 +1,8 @@
 import { useState } from "react"
-import axios from 'axios'
 import { useEffect } from "react";
 import {useNavigate, Link} from "react-router-dom"
 import serviceUser from "../services/serviceUser"
+import useUser from "../Hooks/useUser";
 
 
 
@@ -10,9 +10,10 @@ import serviceUser from "../services/serviceUser"
 export default function Login() {
   const [email, setEmail] = useState({ value: '', validate: false })
   const [password, setPassword] = useState({ value: '', validate: false })
-  const [response, setResponse] = useState('')
+  const [error, setError] = useState('')
   const location = useNavigate()
-
+  const { isLogged,login,setJwt } = useUser()
+ 
   const OnChange = (e) => {
     setEmail({ value: e.target.value })
   }
@@ -21,28 +22,17 @@ export default function Login() {
   }
 
 
-
+  
   useEffect(() => {
-    const user = window.localStorage.getItem('USER')
-    if(user){
+    if(isLogged){
       location('/dashboard')
     }
-  }, []);
+  }, [isLogged]);
 
 
-  const sendCredentials = async(e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault()
-    console.log(email,password)
-    const response = await serviceUser.login(email.value,password.value,setResponse);
-    const user = {
-      email: response.data.email,
-      id: response.data.id,
-      token: response.data.token,
-      };
-    window.localStorage.setItem("USER", JSON.stringify(user));
-    setTimeout(() => location("/dashboard"),500);
-    console.log(response.data);
-    
+    login(email.value,password.value,setError) 
   }
 
 
@@ -55,10 +45,10 @@ export default function Login() {
           <div>
             <h2 className="m-2 text-center text-3xl font-extrabold text-gray-900">Sign in to your account</h2>
           </div>
-          <form className="mt-8 bg-slate-300 p-6 rounded space-y-6" onSubmit={sendCredentials}>
+          <form className="mt-8 bg-slate-300 p-6 rounded space-y-6" onSubmit={handleSubmit}>
             
-            {response ?
-             <label className="text-white text-sm text-center bg-red-600 p-2 rounded-md block ">{response.msg}</label> 
+            {error ?
+             <label className="text-white text-sm text-center bg-red-600 p-2 rounded-md block ">{error.msg}</label> 
              : ''}
 
             <input type="hidden" name="remember" defaultValue="true" />

@@ -1,52 +1,71 @@
 import axios from "axios";
 
-const baseUrl= process.env.REACT_APP_API_URL + "/api"
 
-const user = JSON.parse(window.localStorage.getItem("USER"))
+const baseUrl = process.env.REACT_APP_API_URL + "/api";
 
-const config = {
-    headers: {
-        "x-access-token":user ? user.token:"",
-        "Content-Type": "application/json"
-    }
-}
+const editPatient = (id, data,token) => {
+  return axios
+    .put(baseUrl + "/editPatient/" + id, data, {
+      headers: {
+        "x-access-token": token,
+        "Content-Type": "application/json",
+      },
+    })
+    .then((response) => response);
+};
 
-const editPatient = (id, data)=>{
-    return axios
-    .put(baseUrl + '/editPatient/' + id, data, config)
-    .then(response=> response)
-}
+const getManyPatients = (id,set, handleError,token) => {
+  axios
+    .get(baseUrl + "/getManyPatients/" + id, {
+      headers: {
+        "x-access-token": token,
+        "Content-Type": "application/json",
+      },
+    })
+    .then((res) => set(res.data))
+    .catch((err) => handleError(err.response));
+};
+const getPatient = (setPatient, handleError, id,token) => {
+  axios
+    .get(baseUrl + "/getPatient/" + id, {
+        headers: {
+            "x-access-token":token,
+            "Content-Type": "application/json",
+        }
+    })
+    .then((res) => setPatient(res.data))
+    .catch((err) => handleError(err.response));
+};
 
-const getManyPatients =  (set,handleError) => {
-    axios
-    .get(baseUrl + '/getManyPatients/' + user.id, config)
-    .then(res => set(res.data))
-    .catch(err => handleError(err.response))
-   
-}
-const getPatient =  (setPatient,handleError,id) => {
-    axios
-    .get(baseUrl + '/getPatient/' + id, config)
-    .then(res => setPatient(res.data))
-    .catch(err => handleError(err.response))
-   
-}
+const addPatietns = (data,id,token) => {
+  return axios
+    .post(baseUrl + "/newPatients/" + id, data, {
+      headers: {
+        "x-access-token": token,
+        "Content-Type": "application/json",
+      },
+    })
 
-const addPatietns = (data) =>{
-    return axios
-    .post(baseUrl + '/newPatients/' + user.id, data, config)
-    .then(response => response)
-    .catch(err => err.response )
-}
+    .then((response) => response)
+    .catch((err) => err.response);
+};
 
-const deletePatient = (id) => {
-    return axios
-    .delete(baseUrl + '/deletePatient/' + id, config)
-    .then(res=> res)
-    .catch(err => err.response)
- }
+const deletePatient = (id,token) => {
+  return axios
+    .delete(baseUrl + "/deletePatient/" + id, {
+      headers: {
+        "x-access-token": token,
+        "Content-Type": "application/json",
+      },
+    })
+    .then((res) => res)
+    .catch((err) => err.response);
+};
 
-
-
-
-export default {editPatient, getManyPatients,addPatietns,getPatient,deletePatient}
+export default {
+  editPatient,
+  getManyPatients,
+  addPatietns,
+  getPatient,
+  deletePatient,
+};

@@ -3,6 +3,7 @@ import FormPatient from '../Components/FormPatient';
 import { useState, useEffect } from 'react';
 import services from '../services/servicePatients';
 import { useNavigate, useParams, Link} from 'react-router-dom';
+import useUser from '../Hooks/useUser';
 
 
 const Edit = () => {
@@ -10,9 +11,10 @@ const Edit = () => {
     const [patient, setPatient] = useState('')
     const {id} = useParams()
     const location = useNavigate()
+    const {jwt} = useUser()
 
     useEffect(() => {
-        services.getPatient(setPatient,(a)=>a,id)
+        services.getPatient(setPatient,(a)=>a,id,jwt)
         
         return () => {
             
@@ -22,7 +24,7 @@ const Edit = () => {
     const sendForm = async (e)=>{
         e.preventDefault()
         console.log(newPatient)
-        const response = await services.editPatient(id,newPatient)
+        const response = await services.editPatient(id,newPatient,jwt)
         if ( response.status === 200 ){
             location('/dashboard')
         }

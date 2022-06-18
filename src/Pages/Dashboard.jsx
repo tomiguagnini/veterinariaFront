@@ -4,15 +4,18 @@ import { useState, useEffect } from "react";
 import FormPatient from "../Components/FormPatient";
 import servicePatients from "../services/servicePatients";
 import { useNavigate } from "react-router-dom";
+import useUser from "../Hooks/useUser";
 
 const Dashboard = () => {
   const [patients, setPatients] = useState("");
   const [newPatient, setNewPatient] = useState([]);
   const location = useNavigate();
+  const {id,jwt,isLogged,logOut}=useUser()
 
+  
   useEffect(() => {
     try {
-      servicePatients.getManyPatients(setPatients, handleGetError);
+      servicePatients.getManyPatients(id,setPatients, handleGetError,jwt);
     } catch (err) {
       console.log("error", err);
     }
@@ -20,7 +23,7 @@ const Dashboard = () => {
 
   const handleGetError = (res) => {
     if (res.status === 401) {
-      closeSession();
+      //closeSession();
     }
   };
 
@@ -31,23 +34,24 @@ const Dashboard = () => {
   const handleSubmitPatient = async (event) => {
     event.preventDefault();
 
-    const response = await servicePatients.addPatietns(newPatient);
+    const response = await servicePatients.addPatietns(newPatient,id,jwt);
     if (response.status === 200) {
-      servicePatients.getManyPatients(setPatients, handleGetError);
+      servicePatients.getManyPatients(id,setPatients, handleGetError,jwt);
       clearFormData(event);
     }
   };
   const onClickDelete = async (id) => {
-    const response = await servicePatients.deletePatient(id);
+    const response = await servicePatients.deletePatient(id,jwt);
     if (response.status === 200) {
-      servicePatients.getManyPatients(setPatients, handleGetError);
+      servicePatients.getManyPatients(id,setPatients, handleGetError,jwt);
     }
   };
   const onClickEdit = (id) => {
     location("/edit/" + id);
   };
   const closeSession = async () => {
-    await window.localStorage.removeItem("USER");
+    await window.localStorage.removeItem("Session");
+    logOut()
     location("/");
   };
 
