@@ -23,16 +23,12 @@ export default function Login() {
 
 
   
-  useEffect(() => {
-    if(isLogged){
-      location('/dashboard')
-    }
-  }, [isLogged]);
-
+  
 
   const handleSubmit = async(e) => {
     e.preventDefault()
-    login(email.value,password.value,setError) 
+    login(email.value,password.value,setError)
+    .then((res) => res.status === 200 ? location('/dashboard') : '') 
   }
 
 
